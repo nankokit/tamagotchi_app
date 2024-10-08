@@ -1,6 +1,6 @@
 package com.example.helpme
 
-class Pet(
+data class Pet(
     val name: String,
     val imageResId: Int,
     var food: Int = 100,

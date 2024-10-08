@@ -3,7 +3,6 @@ package com.example.helpme
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -45,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
         val savedPassword = sharedPreferences.getString(username, null)
         if (savedPassword != null && savedPassword == password) {
             Toast.makeText(this, "Авторизация успешна", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, CreatePetActivity::class.java)
             startActivity(intent)
             finish()
         } else {
