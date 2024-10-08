@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#005a42">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Авторизация"
+        android:layout_marginTop="180dp"
+        android:fontFamily="@font/afacad_semibold"
+        android:textSize="28sp"
+        android:textColor="#fdaf17" />
+
+    <EditText
+        android:id="@+id/usernameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#D9CACA"
+        android:hint="Логин"
+        android:textColorHint="#D9CACA"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Пароль"
+        android:inputType="textPassword"
+        android:backgroundTint="#D9CACA"
+        android:textColorHint="#D9CACA"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#fdaf17"
+        android:fontFamily="@font/afacad_semibold"
+        android:text="Войти"
+        android:textColor="#005a42"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/registerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/afacad_semibold"
+        android:paddingTop="16dp"
+        android:text="Создать аккаунт"
+        android:textColor="#D9CACA" />
+
+</LinearLayout>
