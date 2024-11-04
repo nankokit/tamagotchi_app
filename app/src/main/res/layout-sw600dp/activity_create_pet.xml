@@ -17,15 +17,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Выбери своего питомца"
-            android:textSize="28sp"
+            android:textSize="35sp"
             android:layout_marginBottom="16dp"
             android:fontFamily="@font/afacad_semibold"
             android:textColor="#fdaf17" />
 
         <GridView
             android:id="@+id/gridView"
-            android:layout_width="match_parent"
-            android:layout_height="266dp"
+            android:layout_width="400dp"
+            android:layout_height="470dp"
             android:horizontalSpacing="16dp"
             android:numColumns="1"
             android:verticalSpacing="16dp" />
@@ -39,7 +39,7 @@
             android:fontFamily="@font/afacad_semibold"
             android:text="Далее"
             android:textColor="#005a42"
-            android:textSize="20sp" />
+            android:textSize="30sp" />
 
     </LinearLayout>
 </LinearLayout>

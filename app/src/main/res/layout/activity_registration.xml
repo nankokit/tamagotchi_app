@@ -2,69 +2,78 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#005a42"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#005a42">
+    android:gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Регистрация"
-        android:layout_marginTop="180dp"
-        android:layout_gravity="center"
-        android:fontFamily="@font/afacad_semibold"
-        android:textSize="28sp"
-        android:textColor="#fdaf17"/>
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/usernameEditText"
-        android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="0dp"
+            android:fontFamily="@font/afacad_semibold"
+            android:text="Регистрация"
+            android:textColor="#fdaf17"
+            android:textSize="28sp" />
+
+        <EditText
+            android:id="@+id/usernameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#D9CACA"
+            android:hint="Логин"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D9CACA"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#D9CACA"
-        android:hint="Логин"
-        android:textColorHint="#D9CACA"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp" />
-
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:hint="Пароль"
         android:inputType="textPassword"
-        android:backgroundTint="#D9CACA"
-        android:textColorHint="#D9CACA"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"/>
+        android:textColorHint="#D9CACA"
+        android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/confirmPasswordEditText"
-        android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/confirmPasswordEditText"
+            android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#D9CACA"
         android:hint="Подтверждение пароля"
         android:inputType="textPassword"
-        android:backgroundTint="#D9CACA"
-        android:textColorHint="#D9CACA"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"/>
+        android:textColorHint="#D9CACA"
+        android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/registerButton"
-        android:layout_width="match_parent"
+        <Button
+            android:id="@+id/registerButton"
+            android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Создать аккаунт"
         android:layout_marginTop="24dp"
         android:backgroundTint="#fdaf17"
         android:fontFamily="@font/afacad_semibold"
+        android:text="Создать аккаунт"
         android:textColor="#005a42"
         android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/loginTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Уже есть аккаунт? Войти"
-        android:layout_gravity="center"
-        android:paddingTop="16dp"
-        android:textColor="#D9CACA" />
+        <TextView
+            android:id="@+id/loginTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="16dp"
+            android:text="Уже есть аккаунт? Войти"
+            android:textSize="18sp"
+            android:textColor="#D9CACA" />
+    </LinearLayout>
+
 </LinearLayout>
