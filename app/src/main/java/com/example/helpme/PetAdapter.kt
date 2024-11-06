@@ -20,7 +20,8 @@ class PetAdapter(private val context: Context, private val pets: List<Pet>) : Ba
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.pet_card, parent, false)
+        val view =
+            convertView ?: LayoutInflater.from(context).inflate(R.layout.pet_card, parent, false)
 
         val petImageView = view.findViewById<ImageView>(R.id.petImageView)
         val petNameTextView = view.findViewById<TextView>(R.id.petNameTextView)

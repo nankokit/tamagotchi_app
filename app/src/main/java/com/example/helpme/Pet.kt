@@ -1,6 +1,7 @@
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
+import kotlin.random.Random
 
 data class Pet(
     val name: String,
@@ -9,6 +10,7 @@ data class Pet(
     var sleep: Int = 100,
     var entertainment: Int = 0
 ) : Parcelable {
+    var entertainmentChanged: Boolean = false
 
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -34,9 +36,12 @@ data class Pet(
     }
 
     fun updateStats(timeElapsed: Long) {
-        food -= (timeElapsed / 1000).toInt()
-        sleep -= (timeElapsed / 1000).toInt()
-        entertainment -= (timeElapsed / 100).toInt()
+        val randomMultiplierFood = Random.nextInt(1, 6)
+        val randomMultiplierSleep = Random.nextInt(1, 6)
+        val randomMultiplierEntertainment = Random.nextInt(1, 6)
+        food -= (timeElapsed / 1000).toInt() * randomMultiplierFood
+        sleep -= (timeElapsed / 1000).toInt() * randomMultiplierSleep
+        entertainment -= (timeElapsed / 1000).toInt() * randomMultiplierEntertainment
 
         food = food.coerceAtLeast(0)
         sleep = sleep.coerceAtLeast(0)
@@ -60,10 +65,11 @@ data class Pet(
     fun entertain(amount: Int) {
         entertainment += amount
         entertainment = entertainment.coerceAtMost(100)
+        entertainmentChanged = true
         Log.d("PetAction", "Entertained by $amount, Entertainment now: $entertainment")
     }
 
     fun getStatus(): String {
-        return "Питомец: $name\nЕда: $food\nСон: $sleep\nРазвлечения: $entertainment"
+        return "Питомец: $name\nЕда: $food\nСон: $sleep\nЛабы: $entertainment"
     }
 }

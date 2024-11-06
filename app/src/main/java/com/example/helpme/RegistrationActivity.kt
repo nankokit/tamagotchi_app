@@ -22,6 +22,8 @@ class RegistrationActivity : AppCompatActivity() {
     private lateinit var registerButton: Button
     private lateinit var loginTextView: TextView
     private lateinit var nativeLib: NativeLib
+    private lateinit var dbUser: DbUser
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +44,7 @@ class RegistrationActivity : AppCompatActivity() {
                 insets
             }
         } ?: run {
-            Toast.makeText(this, "Ошибка: представление не найдено", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "Ошибка: представление не найдено", Toast.LENGTH_SHORT).show()
         }
 
         usernameEditText = findViewById(R.id.usernameEditText)
@@ -50,8 +52,12 @@ class RegistrationActivity : AppCompatActivity() {
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText)
         registerButton = findViewById(R.id.registerButton)
         loginTextView = findViewById(R.id.loginTextView)
-
+        dbUser = DbUser(DBHelper(this, null))
         nativeLib = NativeLib()
+        val users = dbUser.getAllUsers()
+
+        for (user in users)
+            nativeLib.addUser(user.login, user.password)
 
         registerButton.setOnClickListener { registerUser() }
         loginTextView.setOnClickListener { navigateToLogin() }
@@ -73,11 +79,13 @@ class RegistrationActivity : AppCompatActivity() {
         }
 
         if (nativeLib.isUserExists(username)) {
-            Toast.makeText(this, "Пользователь с таким логином уже существует", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Пользователь с таким логином уже существует", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
         if (nativeLib.addUser(username, password)) {
+            dbUser.addUser(User(username, password))
             Toast.makeText(this, "Регистрация успешна", Toast.LENGTH_SHORT).show()
             navigateToLogin()
         } else {

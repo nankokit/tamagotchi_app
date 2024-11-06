@@ -2,22 +2,30 @@ package com.example.helpme
 
 import Pet
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.ClipData
+import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.DragEvent
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,9 +38,62 @@ class MainActivity : AppCompatActivity() {
     private lateinit var coffeeImageView: ImageView
     private lateinit var laptopImageView: ImageView
     private lateinit var selectedPet: Pet
-
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var runnable: Runnable
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var toggle: ActionBarDrawerToggle
+    private var isGameOver = false
+
+    private val petItemDragListener = View.OnDragListener { view, dragEvent ->
+        when (dragEvent.action) {
+            DragEvent.ACTION_DRAG_STARTED -> {
+                Log.d("PetStatus", "Drag started")
+                true
+            }
+
+            DragEvent.ACTION_DRAG_ENTERED -> {
+                Log.d("PetStatus", "Drag entered")
+//                view.setBackgroundColor(Color.LTGRAY)
+                true
+            }
+
+            DragEvent.ACTION_DRAG_LOCATION -> {
+                Log.d("PetStatus", "Drag location: ${dragEvent.x}, ${dragEvent.y}")
+                true
+            }
+
+            DragEvent.ACTION_DRAG_EXITED -> {
+                Log.d("PetStatus", "Drag exited")
+//                view.setBackgroundColor(Color.TRANSPARENT)
+                true
+            }
+
+            DragEvent.ACTION_DROP -> {
+                Log.d("PetStatus", "Drop event")
+//                view.setBackgroundColor(Color.TRANSPARENT)
+                if (dragEvent.clipData != null && dragEvent.clipData.itemCount > 0) {
+                    val droppedItem = dragEvent.clipData.getItemAt(0).text.toString()
+                    handleDrop(droppedItem) // Обработка сброса
+                    updatePetStatus() // Обновляем статус питомца
+                    true
+                } else {
+                    Log.d("PetStatus", "No clip data available")
+                    false
+                }
+            }
+
+            DragEvent.ACTION_DRAG_ENDED -> {
+                Log.d("PetStatus", "Drag ended")
+                view.setBackgroundColor(Color.TRANSPARENT)
+                true
+            }
+
+            else -> {
+                Log.d("PetStatus", "Unhandled drag event: ${dragEvent.action}")
+                false
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,21 +111,70 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // Инициализация UI компонентов
         initializeUIComponents()
 
-        // Получение питомца из Intent
-        selectedPet = intent.getParcelableExtra("SELECTED_PET") ?: throw IllegalArgumentException("Pet not found")
+        selectedPet = intent.getParcelableExtra("SELECTED_PET")
+            ?: throw IllegalArgumentException("Pet not found")
 
-        // Установка изображения и имени питомца
         updatePetView()
 
-        // Запуск обновления состояния питомца
         startUpdatingPetStatus()
 
-        // Установка слушателей для перетаскивания предметов
         setupTouchListeners()
         setupDragListener()
+        drawerLayout = findViewById(R.id.main)
+        val navView: NavigationView = findViewById(R.id.nav_view)
+
+        toggle =
+            ActionBarDrawerToggle(this, drawerLayout, R.string.open_drawer, R.string.close_drawer)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        val menuIcon: View = findViewById(R.id.menuIcon)
+        menuIcon.setOnClickListener {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.START)
+            }
+        }
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_restart -> {
+                    restartGame()
+                    true
+                }
+
+                R.id.nav_logout -> {
+                    logout()
+                    true
+                }
+
+                R.id.nav_exit -> {
+                    finishAffinity() // Закрыть приложение
+                    true
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("food", selectedPet.food)
+        outState.putInt("sleep", selectedPet.sleep)
+        outState.putInt("entertainment", selectedPet.entertainment)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        selectedPet.food = savedInstanceState.getInt("food")
+        selectedPet.sleep = savedInstanceState.getInt("sleep")
+        selectedPet.entertainment = savedInstanceState.getInt("entertainment")
     }
 
     private fun initializeUIComponents() {
@@ -85,9 +195,15 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupTouchListeners() {
-        foodImageView.setOnTouchListener { view, motionEvent -> handleTouch(view, motionEvent, "food") }
-        coffeeImageView.setOnTouchListener { view, motionEvent -> handleTouch(view, motionEvent, "coffee") }
-        laptopImageView.setOnTouchListener { view, motionEvent -> handleTouch(view, motionEvent, "laptop") }
+        foodImageView.setOnTouchListener { view, motionEvent ->
+            handleTouch(view, motionEvent, "food")
+        }
+        coffeeImageView.setOnTouchListener { view, motionEvent ->
+            handleTouch(view, motionEvent, "coffee")
+        }
+        laptopImageView.setOnTouchListener { view, motionEvent ->
+            handleTouch(view, motionEvent, "laptop")
+        }
     }
 
     private fun handleTouch(view: View, motionEvent: MotionEvent, label: String): Boolean {
@@ -107,49 +223,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupDragListener() {
-        petImageView.setOnDragListener { view, dragEvent -> handleDragEvent(dragEvent) }
+        petImageView.setOnDragListener(petItemDragListener)
     }
 
-    private fun handleDragEvent(dragEvent: DragEvent): Boolean {
-        return when (dragEvent.action) {
-            DragEvent.ACTION_DRAG_ENTERED -> {
-                Log.d("PetStatus", "Drag entered")
-                true
-            }
-            DragEvent.ACTION_DROP -> {
-                if (dragEvent.clipData != null && dragEvent.clipData.itemCount > 0) {
-                    val droppedItem = dragEvent.clipData.getItemAt(0).text.toString()
-                    Log.d("PetStatus", "Dropped item: $droppedItem")
-                    handleDrop(droppedItem)
-                    true
-                } else {
-                    Log.d("PetStatus", "No clip data available")
-                    false
-                }
-            }
-            DragEvent.ACTION_DRAG_ENDED -> {
-                Log.d("PetStatus", "Drag ended")
-                true
-            }
-            else -> false
-        }
-    }
 
     private fun handleDrop(item: String) {
         Log.d("PetStatus", "Handling dropped item: $item")
+        if (isGameOver) {
+            Log.d("PetStatus", "Cannot handle drop; game is over.")
+            return // Не обрабатываем сброс, если игра окончена
+        }
         when (item) {
             "food" -> {
                 selectedPet.feed(10)
                 Log.d("PetStatus", "Food increased: ${selectedPet.food}")
             }
+
             "coffee" -> {
                 selectedPet.putToSleep(5)
                 Log.d("PetStatus", "Sleep increased: ${selectedPet.sleep}")
             }
+
             "laptop" -> {
+                selectedPet.putToSleep(-10)
                 selectedPet.entertain(5)
                 Log.d("PetStatus", "Entertainment increased: ${selectedPet.entertainment}")
             }
+
             else -> {
                 Log.d("PetStatus", "Unknown item dragged.")
             }
@@ -159,20 +259,137 @@ class MainActivity : AppCompatActivity() {
 
     private fun startUpdatingPetStatus() {
         runnable = Runnable {
-            selectedPet.updateStats(1000) // Уменьшение значений каждую секунду
-            Log.d("PetStatus", "Updated pet stats: ${selectedPet.getStatus()}")
-            updatePetStatus()
-            handler.postDelayed(runnable, 1000)
+            if (!isGameOver) {
+                selectedPet.updateStats(1000)
+                //Log.d("PetStatus", "Updated pet stats: ${selectedPet.getStatus()}")
+                updatePetStatus()
+            }
+            handler.postDelayed(runnable, 2000)
         }
         handler.post(runnable)
     }
 
-    @SuppressLint("SetTextI18n")
     private fun updatePetStatus() {
         foodStatusTextView.text = "Еда: ${selectedPet.food}"
         sleepStatusTextView.text = "Сон: ${selectedPet.sleep}"
-        entertainmentStatusTextView.text = "Развлечения: ${selectedPet.entertainment}"
-        Log.d("PetStatus", "UI updated: Food: ${selectedPet.food}, Sleep: ${selectedPet.sleep}, Entertainment: ${selectedPet.entertainment}")
+        entertainmentStatusTextView.text = "Лабы: ${selectedPet.entertainment}"
+        Log.d(
+            "PetStatus",
+            "UI updated: Food: ${selectedPet.food}, Sleep: ${selectedPet.sleep}, Entertainment: ${selectedPet.entertainment}"
+        )
+
+
+        if (selectedPet.food <= 0) {
+            endGame("food")
+        } else if (selectedPet.sleep <= 0) {
+            endGame("sleep")
+        } else if (selectedPet.entertainment <= 0 && selectedPet.entertainmentChanged) {
+            endGame("entertainment")
+        }
+        if (selectedPet.entertainment == 100) {
+            winGame()
+        }
+    }
+
+    private fun winGame() {
+        isGameOver = true
+        handler.removeCallbacks(runnable)
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_win, null)
+        val dialogImageView = dialogView.findViewById<ImageView>(R.id.winImageView)
+        val dialogMessage = dialogView.findViewById<TextView>(R.id.winMessage)
+        val exitButton = dialogView.findViewById<Button>(R.id.exitButton)
+        val createPetButton = dialogView.findViewById<Button>(R.id.createPetButton)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        exitButton.setOnClickListener {
+
+            finishAffinity()
+        }
+
+        createPetButton.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    CreatePetActivity::class.java
+                )
+            )
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun endGame(reason: String) {
+        isGameOver = true
+        handler.removeCallbacks(runnable)
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_game_over, null)
+        val dialogImageView = dialogView.findViewById<ImageView>(R.id.dialogImageView)
+        val dialogMessage = dialogView.findViewById<TextView>(R.id.dialogMessage)
+        val exitButton = dialogView.findViewById<Button>(R.id.exitButton)
+        val createPetButton = dialogView.findViewById<Button>(R.id.createPetButton)
+
+        dialogMessage.text = when (reason) {
+            "food" -> "Рамен остыл в ваших отношениях! Игра окончена."
+            "sleep" -> "В молекуле нет твоего любимого сиропа! Игра окончена."
+            "entertainment" -> "У кого-то лапки, но не лабки! Игра окончена."
+            else -> "Игра окончена."
+        }
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        exitButton.setOnClickListener {
+
+            finishAffinity()
+        }
+
+        createPetButton.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    CreatePetActivity::class.java
+                )
+            )
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun restartGame() {
+        // Логика для перезапуска игры
+        val intent = Intent(this, CreatePetActivity::class.java)
+        startActivity(intent)
+        finish() // Закрывает текущую активность
+    }
+
+    private fun logout() {
+        // Логика выхода из аккаунта
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish() // Закрывает текущую активность
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
     }
 
     override fun onDestroy() {

@@ -2,23 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/petImageView"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/petNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/afacad_semibold"
-        android:textColor="#fdaf17"/>
+        android:textColor="#fdaf17"
+        android:textSize="30sp" />
 </LinearLayout>

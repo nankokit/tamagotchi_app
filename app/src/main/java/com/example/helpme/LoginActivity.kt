@@ -42,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
                 insets
             }
         } ?: run {
-            Toast.makeText(this, "Ошибка: представление не найдено", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "Ошибка: представление не найдено", Toast.LENGTH_SHORT).show()
         }
 
         usernameEditText = findViewById(R.id.usernameEditText)

@@ -2,65 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:background="#005a42"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="500dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="@font/afacad_semibold"
-        android:text="Авторизация"
-        android:textColor="#fdaf17"
-        android:textSize="30sp" />
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/usernameEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#D9CACA"
-        android:hint="Логин"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#D9CACA"
-        android:textSize="30sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/afacad_semibold"
+            android:text="Авторизация"
+            android:textColor="#fdaf17"
+            android:textSize="30sp" />
 
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#D9CACA"
-        android:hint="Пароль"
-        android:inputType="textPassword"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#D9CACA"
-        android:textSize="30sp" />
+        <EditText
+            android:id="@+id/usernameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#D9CACA"
+            android:hint="Логин"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D9CACA"
+            android:textSize="30sp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/loginButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="#fdaf17"
-        android:fontFamily="@font/afacad_semibold"
-        android:text="Войти"
-        android:textColor="#005a42"
-        android:textSize="30sp" />
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#D9CACA"
+            android:hint="Пароль"
+            android:inputType="textPassword"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D9CACA"
+            android:textSize="30sp" />
 
-    <TextView
-        android:id="@+id/registerTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="@font/afacad_semibold"
-        android:textSize="24dp"
-    android:text="Создать аккаунт"
-    android:textColor="#D9CACA" />
-</LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#fdaf17"
+            android:fontFamily="@font/afacad_semibold"
+            android:text="Войти"
+            android:textColor="#005a42"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/registerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/afacad_semibold"
+            android:text="Создать аккаунт"
+            android:textColor="#D9CACA"
+            android:textSize="24dp" />
     </LinearLayout>
+</LinearLayout>

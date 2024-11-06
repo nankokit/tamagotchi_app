@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_restart"
+        android:title="Начать заново" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Выйти из аккаунта" />
+
+    <item
+        android:id="@+id/nav_exit"
+        android:title="Закрыть приложение" />
+</menu>

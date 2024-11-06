@@ -35,10 +35,22 @@ class CreatePetActivity : AppCompatActivity() {
         petAdapter = PetAdapter(this, pets)
         gridView.adapter = petAdapter
 
-        gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            selectedPet = petAdapter.getItem(position)
-            Toast.makeText(this, "Вы выбрали: ${selectedPet?.name}", Toast.LENGTH_SHORT).show()
+
+        if (savedInstanceState != null) {
+            selectedPet = savedInstanceState.getParcelable("SELECTED_PET")
         }
+
+        // Установка выделенного питомца в адаптере
+        selectedPet?.let {
+            val selectedPosition = pets.indexOf(it)
+            gridView.setItemChecked(selectedPosition, true)
+        }
+
+        gridView.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                selectedPet = petAdapter.getItem(position)
+                Toast.makeText(this, "Вы выбрали: ${selectedPet?.name}", Toast.LENGTH_SHORT).show()
+            }
 
         val buttonNext = findViewById<Button>(R.id.buttonNext)
         buttonNext.setOnClickListener {
@@ -51,5 +63,17 @@ class CreatePetActivity : AppCompatActivity() {
                 Toast.makeText(this, "Пожалуйста, выберите питомца", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Сохранение состояния выбранного питомца
+        outState.putParcelable("SELECTED_PET", selectedPet)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // Восстановление состояния
+        selectedPet = savedInstanceState.getParcelable("SELECTED_PET")
     }
 }
